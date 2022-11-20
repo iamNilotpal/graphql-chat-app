@@ -20,7 +20,7 @@ const Login = () => {
           <Image src={googleIcon} alt="Google icon" width={20} height={20} />
         }
       >
-        Login With Google
+        Continue With Google
       </Button>
     </>
   );

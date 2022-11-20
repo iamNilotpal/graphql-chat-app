@@ -8,10 +8,14 @@ type AuthProps = {
   updateSession: () => void;
 };
 
-const Auth: React.FC<AuthProps> = ({ session }) => {
+const Auth: React.FC<AuthProps> = ({ session, updateSession }) => {
   return (
     <Center flexDir="column" minHeight="100vh">
-      {session?.user ? <GetUsername /> : <Login />}
+      {session?.user ? (
+        <GetUsername updateSession={updateSession} />
+      ) : (
+        <Login />
+      )}
     </Center>
   );
 };
