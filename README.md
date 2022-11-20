@@ -3,17 +3,13 @@
 First, clone the repo by running
 
 ```bash
-https://github.com/iamNilotpal/graphql-chat-app.git
+git clone https://github.com/iamNilotpal/graphql-chat-app.git
 ```
 
-`cd` into the both `frontend` and `backend` folder and run
+cd into the both `frontend` and `backend` folder and run
 
 ```
-yarn
-
-or
-
-npm i
+yarn or npm i
 ```
 
 Now check the .env.example files to setup your environment variables.
