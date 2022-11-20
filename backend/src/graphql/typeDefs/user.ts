@@ -7,8 +7,8 @@ const typeDefs = gql`
   }
 
   type CreateUsernameResponse {
-    success: Boolean
-    error: String
+    success: Boolean!
+    error: String!
   }
 
   type Query {
