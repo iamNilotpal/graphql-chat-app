@@ -2,13 +2,16 @@ import { gql } from 'apollo-server-core';
 
 const typeDefs = gql`
   type User {
-    id: String!
-    username: String!
+    id: String
+    name: String
+    email: String
+    image: String
+    username: String
   }
 
   type CreateUsernameResponse {
     success: Boolean!
-    error: String!
+    error: String
   }
 
   type Query {

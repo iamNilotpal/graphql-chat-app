@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
 import { getSession } from 'next-auth/react';
+import { PrismaClient } from '@prisma/client';
 
 import resolvers from './graphql/resolvers';
 import typeDefs from './graphql/typeDefs';
@@ -15,6 +16,8 @@ const httpServer = http.createServer(app);
 dotenv.config();
 
 const PORT = +process.env.PORT || 4000;
+const prisma = new PrismaClient();
+
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
@@ -25,7 +28,7 @@ const server = new ApolloServer({
   csrfPrevention: true,
   context: async ({ req }): Promise<GraphQLContext> => {
     const session = await getSession({ req });
-    return { session };
+    return { session, prisma };
   },
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
