@@ -24,12 +24,10 @@ Run this command in the `frontend` directory
 
 ```bash
 yarn dev
-``
 ```
 
 and this command in the `backend` directory
 
 ```bash
 yarn start:dev
-``
 ```
