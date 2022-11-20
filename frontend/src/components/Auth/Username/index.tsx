@@ -2,7 +2,6 @@ import { useMutation } from '@apollo/client';
 import { Button, Input, useToast, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import userOperations from '../../../graphql/operations/user';
-import { Spinner } from '@chakra-ui/react';
 
 type CreateUsernameData = {
   createUsername: {
@@ -29,34 +28,20 @@ const GetUsername: React.FC<GetUsernameProps> = ({ updateSession }) => {
 
   const handleCreateUsername = async () => {
     try {
-      if (!username)
-        return toast({
-          status: 'error',
-          variant: 'subtle',
-          description: 'Username is required.',
-          isClosable: true,
-          duration: 2000,
-        });
-
+      if (!username) throw new Error('Username is required');
       const { data } = await createUsername({
         variables: { username },
       });
 
       if (!data?.createUsername.success)
-        return toast({
-          status: 'error',
-          variant: 'subtle',
-          description: data?.createUsername.error,
-          isClosable: true,
-          duration: 2000,
-        });
-
+        throw new Error(data?.createUsername.error);
       updateSession();
     } catch (error) {
       toast({
         status: 'error',
         variant: 'subtle',
-        description: 'Something went wrong',
+        description:
+          error instanceof Error ? error.message : 'Something went wrong',
         isClosable: true,
         duration: 2000,
       });
@@ -67,17 +52,18 @@ const GetUsername: React.FC<GetUsernameProps> = ({ updateSession }) => {
     <VStack align="center">
       <Input
         width="350px"
-        placeholder="Type your username"
+        placeholder="Pick a username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        fontSize="13px"
       />
       <Button
-        w="100%"
+        width="350px"
         disabled={!username || username.length < 3 || loading}
         onClick={handleCreateUsername}
+        isLoading={loading}
       >
         Save
-        {loading && <Spinner size="sm" ml="15px" />}
       </Button>
     </VStack>
   );

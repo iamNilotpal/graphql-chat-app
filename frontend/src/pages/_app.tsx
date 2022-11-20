@@ -6,10 +6,11 @@ import { theme } from '../chakra/theme';
 import { client } from '../graphql/apollo-client';
 
 /* FONTS */
-import '@fontsource/open-sans/400.css';
-import '@fontsource/open-sans/500.css';
-import '@fontsource/open-sans/600.css';
-import '@fontsource/open-sans/700.css';
+import '@fontsource/montserrat/400.css';
+import '@fontsource/montserrat/500.css';
+import '@fontsource/montserrat/600.css';
+import '@fontsource/montserrat/700.css';
+import RootLayout from '../../layout/RootLayout';
 
 export default function App({
   Component,
@@ -20,7 +21,9 @@ export default function App({
       <SessionProvider session={session}>
         <ChakraProvider theme={theme}>
           <CSSReset />
-          <Component {...rest} />
+          <RootLayout>
+            <Component {...rest} />
+          </RootLayout>
         </ChakraProvider>
       </SessionProvider>
     </ApolloProvider>

@@ -10,12 +10,13 @@ export const theme = extendTheme(
   {
     colors: {
       brand: {
-        100: '#3d84f7',
+        blue: '#3d84f7',
+        yellow: '#f4f73e',
       },
     },
     fonts: {
-      heading: `'Open Sans', sans-serif`,
-      body: `'Open Sans', sans-serif`,
+      heading: `'Montserrat', sans-serif`,
+      body: `'Montserrat', sans-serif`,
     },
     styles: {
       global: () => ({

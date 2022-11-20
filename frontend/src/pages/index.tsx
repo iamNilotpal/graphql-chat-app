@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <Box>
       {data?.user && data?.user.username ? (
-        <Chat />
+        <Chat session={data} />
       ) : (
         <Auth session={data} updateSession={reloadSession} />
       )}
