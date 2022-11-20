@@ -1,7 +1,9 @@
+import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, CSSReset } from '@chakra-ui/react';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { theme } from '../chakra/theme';
+import { client } from '../graphql/apollo-client';
 
 /* FONTS */
 import '@fontsource/open-sans/400.css';
@@ -14,11 +16,13 @@ export default function App({
   pageProps: { session, ...rest },
 }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <ChakraProvider theme={theme}>
-        <CSSReset />
-        <Component {...rest} />
-      </ChakraProvider>
-    </SessionProvider>
+    <ApolloProvider client={client}>
+      <SessionProvider session={session}>
+        <ChakraProvider theme={theme}>
+          <CSSReset />
+          <Component {...rest} />
+        </ChakraProvider>
+      </SessionProvider>
+    </ApolloProvider>
   );
 }
