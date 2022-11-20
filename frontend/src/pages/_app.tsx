@@ -4,13 +4,13 @@ import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { theme } from '../chakra/theme';
 import { client } from '../graphql/apollo-client';
+import RootLayout from '../layout/RootLayout';
 
 /* FONTS */
 import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/600.css';
 import '@fontsource/montserrat/700.css';
-import RootLayout from '../../layout/RootLayout';
 
 export default function App({
   Component,
