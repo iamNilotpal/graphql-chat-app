@@ -2,17 +2,10 @@ import { useMutation } from '@apollo/client';
 import { Button, Input, useToast, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import userOperations from '../../../graphql/operations/user';
-
-type CreateUsernameData = {
-  createUsername: {
-    success: boolean;
-    error: string;
-  };
-};
-
-type CreateUsernameVariables = {
-  username: string;
-};
+import {
+  CreateUsernameData,
+  CreateUsernameVariables,
+} from '../../../types/operations';
 
 type GetUsernameProps = {
   updateSession: () => void;
