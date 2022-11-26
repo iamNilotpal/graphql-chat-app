@@ -1,11 +1,12 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { PrismaClient } from '@prisma/client';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
 import { getSession } from 'next-auth/react';
-import { PrismaClient } from '@prisma/client';
+import { Session } from './types/session';
 
 import resolvers from './graphql/resolvers';
 import typeDefs from './graphql/typeDefs';
@@ -26,9 +27,10 @@ const server = new ApolloServer({
   schema,
   cache: 'bounded',
   csrfPrevention: true,
+
   context: async ({ req }): Promise<GraphQLContext> => {
     const session = await getSession({ req });
-    return { session, prisma };
+    return { session: session as Session, prisma };
   },
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
@@ -37,7 +39,10 @@ async function startApolloServer() {
   await server.start();
   server.applyMiddleware({
     app,
-    cors: { origin: process.env.FRONTEND_URL, credentials: true },
+    cors: {
+      origin: process.env.FRONTEND_URL,
+      credentials: true,
+    },
   });
   httpServer.listen({ port: PORT }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)

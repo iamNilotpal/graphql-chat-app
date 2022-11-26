@@ -1,10 +1,38 @@
+import { User } from '@prisma/client';
+import { AuthenticationError, HttpQueryError } from 'apollo-server-core';
 import GraphQLContext from '../../types/context';
-import { CreateUserNameData, CreateUserNameResponse } from '../../types/user';
+import {
+  CreateUserNameData,
+  CreateUserNameResponse,
+  SearchUsersInput,
+} from '../../types/user';
 
 const resolver = {
   Query: {
     user: () => {},
     users: () => {},
+    searchUsers: async (
+      _: any,
+      { username: searchUsername }: SearchUsersInput,
+      { session, prisma }: GraphQLContext
+    ): Promise<User[]> => {
+      if (!session.user) throw new AuthenticationError('You must login.');
+      try {
+        const users = await prisma.user.findMany({
+          where: {
+            username: {
+              contains: searchUsername,
+              not: session.user.username,
+              mode: 'insensitive',
+            },
+          },
+        });
+        return users;
+      } catch (error) {
+        console.log({ error });
+        throw new HttpQueryError(500, 'Something went wrong');
+      }
+    },
   },
   Mutation: {
     createUsername: async (

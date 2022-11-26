@@ -14,9 +14,16 @@ const typeDefs = gql`
     error: String
   }
 
+  type SearchUser {
+    id: String
+    username: String
+    image: String
+  }
+
   type Query {
     user(username: String!): User
     users: [User]!
+    searchUsers(username: String!): [SearchUser]!
   }
 
   type Mutation {
