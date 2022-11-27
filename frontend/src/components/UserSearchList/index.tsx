@@ -1,14 +1,5 @@
-import {
-  Avatar,
-  AvatarBadge,
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { Avatar, Button, Flex, Stack, Text } from '@chakra-ui/react';
+import React from 'react';
 import { SearchUser } from '../../types/operations';
 
 type UserSearchListProps = {
