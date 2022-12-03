@@ -9,21 +9,35 @@ const typeDefs = gql`
     username: String
   }
 
-  type CreateUsernameResponse {
-    success: Boolean!
-    error: String
+  type ApiError {
+    statusCode: Int!
+    message: String!
   }
 
-  type SearchUser {
-    id: String
-    username: String
-    image: String
+  type SearchUsernameData {
+    users: [User]!
+  }
+
+  type SearchUsernameResponse {
+    error: ApiError
+    success: Boolean!
+    data: SearchUsernameData
+  }
+
+  type CreateUsernameData {
+    user: User!
+  }
+
+  type CreateUsernameResponse {
+    success: Boolean!
+    error: ApiError
+    data: CreateUsernameData
   }
 
   type Query {
-    user(username: String!): User
     users: [User]!
-    searchUsers(username: String!): [SearchUser]!
+    user(username: String!): User
+    searchUsers(username: String!): SearchUsernameResponse!
   }
 
   type Mutation {
