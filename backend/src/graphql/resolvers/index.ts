@@ -1,5 +1,5 @@
 import userResolver from './user';
-import chatResolver from './chat';
+import conversationResolver from './conversation';
 import merge from 'lodash.merge';
 
-export default merge({}, userResolver, chatResolver);
+export default merge({}, userResolver, conversationResolver);
