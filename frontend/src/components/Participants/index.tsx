@@ -1,11 +1,12 @@
 import { CloseIcon } from '@chakra-ui/icons';
 import { Badge, Box, Button, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
-import { SearchUser } from '../../types/operations';
+import { SearchedUser } from '../../types/operations/user';
 
 type ParticipantsProps = {
-  participants: SearchUser[];
-  onRemoveParticipant: (participant: SearchUser) => void;
+  participants: SearchedUser[];
+  loading: boolean;
+  onRemoveParticipant: (participant: SearchedUser) => void;
   onCreateConversation: () => void;
 };
 
@@ -13,6 +14,7 @@ const Participants: React.FC<ParticipantsProps> = ({
   participants,
   onRemoveParticipant,
   onCreateConversation,
+  loading,
 }) => {
   return participants.length == 0 ? (
     <Text mt="5" textAlign="center">
@@ -26,8 +28,9 @@ const Participants: React.FC<ParticipantsProps> = ({
             <Flex alignItems="center" p={2}>
               <Text mr="5">{participant.username}</Text>
               <CloseIcon
-                onClick={() => onRemoveParticipant(participant)}
+                fontSize="10px"
                 cursor="pointer"
+                onClick={() => onRemoveParticipant(participant)}
               />
             </Flex>
           </Badge>
@@ -39,6 +42,9 @@ const Participants: React.FC<ParticipantsProps> = ({
         w="100%"
         colorScheme="messenger"
         onClick={onCreateConversation}
+        isLoading={loading}
+        disabled={loading}
+        loadingText="Creating conversation..."
       >
         Create Conversation
       </Button>

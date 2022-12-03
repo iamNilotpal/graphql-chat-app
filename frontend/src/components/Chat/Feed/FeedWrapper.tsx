@@ -6,7 +6,7 @@ type FeedWrapperProps = {
 };
 
 const FeedWrapper: React.FC<FeedWrapperProps> = () => {
-  return <div>FeedWrapper</div>;
+  return null;
 };
 
 export default FeedWrapper;

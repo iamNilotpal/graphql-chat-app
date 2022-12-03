@@ -1,13 +1,22 @@
 import { gql } from '@apollo/client';
 
-export default {
+const UserOperations = {
   Query: {
     searchUsers: gql`
       query SearchUsersQuery($username: String!) {
         searchUsers(username: $username) {
-          id
-          image
-          username
+          success
+          error {
+            message
+            statusCode
+          }
+          data {
+            users {
+              id
+              image
+              username
+            }
+          }
         }
       }
     `,
@@ -17,8 +26,18 @@ export default {
     createUsername: gql`
       mutation CreateUserName($username: String!) {
         createUsername(username: $username) {
-          error
           success
+          error {
+            message
+            statusCode
+          }
+          data {
+            user {
+              id
+              image
+              username
+            }
+          }
         }
       }
     `,
@@ -26,3 +45,5 @@ export default {
 
   Subscription: {},
 };
+
+export default UserOperations;

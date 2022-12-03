@@ -1,10 +1,10 @@
 import { Avatar, Button, Flex, Stack, Text } from '@chakra-ui/react';
 import React from 'react';
-import { SearchUser } from '../../types/operations';
+import { SearchedUser } from '../../types/operations/user';
 
 type UserSearchListProps = {
-  users: SearchUser[];
-  onSelectParticipant: (participant: SearchUser) => void;
+  users: SearchedUser[];
+  onSelectParticipant: (participant: SearchedUser) => void;
 };
 
 const UserSearchList: React.FC<UserSearchListProps> = ({

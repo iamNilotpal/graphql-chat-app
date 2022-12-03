@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { Button, Input, useToast, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
+
 import userOperations from '../../../graphql/operations/user';
 import {
-  CreateUsernameData,
-  CreateUsernameVariables,
-} from '../../../types/operations';
+  CreateUsernameInput,
+  CreateUserNameResponse,
+} from '../../../types/operations/user';
 
 type GetUsernameProps = {
   updateSession: () => void;
@@ -15,8 +16,8 @@ const GetUsername: React.FC<GetUsernameProps> = ({ updateSession }) => {
   const toast = useToast();
   const [username, setUsername] = useState('');
   const [createUsername, { loading }] = useMutation<
-    CreateUsernameData,
-    CreateUsernameVariables
+    CreateUserNameResponse,
+    CreateUsernameInput
   >(userOperations.Mutation.createUsername);
 
   const handleCreateUsername = async () => {
@@ -27,7 +28,7 @@ const GetUsername: React.FC<GetUsernameProps> = ({ updateSession }) => {
       });
 
       if (!data?.createUsername.success)
-        throw new Error(data?.createUsername.error);
+        throw new Error(data?.createUsername.error?.message);
       updateSession();
     } catch (error) {
       toast({

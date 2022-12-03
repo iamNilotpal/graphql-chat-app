@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   Button,
   Input,
@@ -8,16 +8,24 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
+
+import ConversationOperations from '../../../graphql/operations/conversation';
 import UserOperations from '../../../graphql/operations/user';
-import {
-  SearchUser,
-  SearchUsersData,
-  SearchUsersInput,
-} from '../../../types/operations';
 import Participants from '../../Participants';
 import UserSearchList from '../../UserSearchList';
 import BaseModal from '../BaseModal';
+
+import {
+  SearchedUser,
+  SearchUsersInput,
+  SearchUsersResponse,
+} from '../../../types/operations/user';
+import {
+  CreateConversationInput,
+  CreateConversationResponse,
+} from '../../../types/operations/conversation';
 
 type NewConversationModalProps = {
   isOpen: boolean;
@@ -28,12 +36,17 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [username, setUsername] = useState('');
-  const [participants, setParticipants] = useState<SearchUser[]>([]);
-  const [searchUsers, { data, loading, error }] = useLazyQuery<
-    SearchUsersData,
-    SearchUsersInput
-  >(UserOperations.Query.searchUsers);
+  const { data: session } = useSession();
+  const [username, setUsername] = useState<string>('');
+  const [participants, setParticipants] = useState<SearchedUser[]>([]);
+  const [searchUsers, { data: searchedUsersData, loading: searchUserLoading }] =
+    useLazyQuery<SearchUsersResponse, SearchUsersInput>(
+      UserOperations.Query.searchUsers
+    );
+  const [createConversation, { loading: createConversationLoading }] =
+    useMutation<CreateConversationResponse, CreateConversationInput>(
+      ConversationOperations.Mutation.createConversation
+    );
 
   const onSubmitUsername = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +54,7 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
     setUsername('');
   };
 
-  const onSelectParticipant = (participant: SearchUser) => {
+  const onSelectParticipant = (participant: SearchedUser) => {
     const exist = participants.find(
       (p) => p.id.toString() === participant.id.toString()
     );
@@ -49,16 +62,26 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
     setParticipants((prev) => [...prev, participant]);
   };
 
-  const onRemoveParticipant = (participant: SearchUser) => {
+  const onRemoveParticipant = (participant: SearchedUser) => {
     setParticipants((prev) =>
       prev.filter((p) => p.id.toString() !== participant.id.toString())
     );
   };
 
   const onCreateConversation = async () => {
-    if (participants.length === 0) return;
+    // if (participants.length === 0) return;
+    // const participantIds: string[] = [session?.user!, ...participants].map(
+    //   (p) => p.id
+    // );
+
     try {
-    } catch (error) {}
+      const { data } = await createConversation({
+        variables: { participantIds: [] },
+      });
+      console.log(data?.createConversation);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -82,16 +105,16 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
             />
             <Button
               type="submit"
-              disabled={!username || loading}
-              isLoading={loading}
+              disabled={!username || searchUserLoading}
+              isLoading={searchUserLoading}
             >
               Submit
             </Button>
           </Stack>
         </form>
-        {data?.searchUsers && (
+        {searchedUsersData?.searchUsers.data.users && (
           <UserSearchList
-            users={data.searchUsers || []}
+            users={searchedUsersData?.searchUsers.data.users || []}
             onSelectParticipant={onSelectParticipant}
           />
         )}
@@ -100,16 +123,19 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
             participants={participants}
             onRemoveParticipant={onRemoveParticipant}
             onCreateConversation={onCreateConversation}
+            loading={createConversationLoading}
           />
         )}
-        <Text
-          fontSize="12px"
-          fontWeight="bold"
-          textAlign="center"
-          color="red.600"
-        >
-          {error?.message}
-        </Text>
+        {!searchedUsersData?.searchUsers.success && (
+          <Text
+            fontSize="12px"
+            fontWeight="bold"
+            textAlign="center"
+            color="red.600"
+          >
+            {searchedUsersData?.searchUsers.error?.message}
+          </Text>
+        )}
       </ModalBody>
     </BaseModal>
   );

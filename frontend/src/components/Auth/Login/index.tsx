@@ -15,7 +15,7 @@ const Login = () => {
         >
           Let's get up and running
         </Text>
-        <Text fontSize="14px">
+        <Text fontSize={{ base: '11px', md: '14px' }}>
           Click on the button to get started and chat with your friends.
         </Text>
       </VStack>
