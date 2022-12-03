@@ -59,22 +59,24 @@ model VerificationToken {
 }
 
 model Conversation {
-  id                   String                    @id @default(auto()) @map("_id") @db.ObjectId
-  participants         ConversationParticipant[]
-  messages             Message[]
-  latestMessageId      String                    @unique
-  latestMessage        Message?                  @relation(name: "latestMessage", fields: [latestMessageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  hasSeenLatestMessage Boolean
-  createdAt            DateTime                  @default(now())
-  updatedAt            DateTime                  @updatedAt
+  id              String                    @id @default(auto()) @map("_id") @db.ObjectId
+  participants    ConversationParticipant[]
+  messages        Message[]
+  latestMessageId String?                   @unique
+  latestMessage   Message?                  @relation(name: "latestMessage", fields: [latestMessageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
 }
 
 model ConversationParticipant {
-  id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String
-  user           User         @relation(fields: [userId], references: [id])
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  id                   String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId               String
+  user                 User         @relation(fields: [userId], references: [id])
+  conversationId       String
+  conversation         Conversation @relation(fields: [conversationId], references: [id])
+  hasSeenLatestMessage Boolean
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
 }
 
 model Message {
