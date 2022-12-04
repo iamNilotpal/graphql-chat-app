@@ -1,4 +1,4 @@
-import { Conversation, PrismaClient } from '@prisma/client';
+import { Conversation, Prisma, PrismaClient, User } from '@prisma/client';
 import { ApolloError } from 'apollo-server-core';
 
 class ConversationService {
@@ -6,6 +6,21 @@ class ConversationService {
 
   constructor() {
     this.#prisma = new PrismaClient();
+  }
+
+  async getAllConversations(user: User) {
+    try {
+      const conversations = await this.#prisma.conversationParticipant.findMany(
+        {
+          where: {
+            userId: user.id,
+          },
+        }
+      );
+      return conversations;
+    } catch (error) {
+      throw new ApolloError('Error finding conversations.', '500');
+    }
   }
 
   async createConversation(
@@ -24,20 +39,50 @@ class ConversationService {
           participants: {
             createMany: {
               data: participantIds.map((id) => ({
-                hasSeenLatestMessage: userId === id,
                 userId: id,
+                hasSeenLatestMessage: userId === id,
               })),
             },
           },
         },
-        include: { participants: true },
+        include: ConversationPopulated,
       });
 
       return conversation;
     } catch (error) {
+      console.log(error.message);
       throw new ApolloError('Error creating conversation', '500');
     }
   }
 }
+
+export const ConversationParticipantPopulated =
+  Prisma.validator<Prisma.ConversationParticipantInclude>()({
+    user: {
+      select: {
+        id: true,
+        username: true,
+        image: true,
+      },
+    },
+  });
+
+export const ConversationPopulated =
+  Prisma.validator<Prisma.ConversationInclude>()({
+    participants: {
+      include: ConversationParticipantPopulated,
+    },
+    latestMessage: {
+      include: {
+        sender: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    },
+    messages: {},
+  });
 
 export default new ConversationService();

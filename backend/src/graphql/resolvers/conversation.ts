@@ -1,4 +1,3 @@
-import { ApolloError, AuthenticationError } from 'apollo-server-core';
 import { returnApiError, returnApiResponse } from '../../lib/api-response';
 import conversationService from '../../services/conversation.service';
 import userService from '../../services/user.service';
@@ -6,10 +5,26 @@ import GraphQLContext from '../../types/context';
 import {
   CreateConversationInput,
   CreateConversationResponse,
+  GetAllConversationsResponse,
 } from '../../types/conversation';
 
 const resolver = {
-  Query: {},
+  Query: {
+    conversations: async (_: any, __: any, { session }: GraphQLContext) => {
+      userService.checkAuthentication(session);
+      try {
+        const conversations = await conversationService.getAllConversations(
+          null
+        );
+        console.log(conversations);
+        return returnApiResponse({ conversations });
+      } catch (error) {
+        console.log(error.message);
+        return returnApiError(error);
+      }
+    },
+  },
+
   Mutation: {
     createConversation: async (
       _: any,
@@ -23,6 +38,7 @@ const resolver = {
           participantIds,
           session.user.id
         );
+        console.log(conversation);
         return returnApiResponse({ conversation });
       } catch (error) {
         return returnApiError(error);

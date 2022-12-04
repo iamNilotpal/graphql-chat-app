@@ -8,3 +8,7 @@ export type CreateConversationInput = {
 export interface CreateConversationResponse extends DefaultApiResponse {
   data: { conversation: Conversation };
 }
+
+export interface GetAllConversationsResponse extends DefaultApiResponse {
+  data: { conversations: Conversation[] };
+}
