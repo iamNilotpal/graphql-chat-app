@@ -3,7 +3,7 @@ import React from 'react';
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Box width="100%" height="100vh" bg="#231f20">
+    <Box width="100%" minHeight="100vh" bg="#231f20">
       {children}
     </Box>
   );

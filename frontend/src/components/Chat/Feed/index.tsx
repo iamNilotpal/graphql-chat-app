@@ -1,8 +1,13 @@
+import { Session } from 'next-auth';
 import React from 'react';
 import ConversationFeed from './Conversation';
 
-const Feed = () => {
-  return <ConversationFeed session={{ expires: new Date() }} />;
+type FeedProps = {
+  session: Session;
+};
+
+const Feed: React.FC<FeedProps> = ({ session }) => {
+  return <ConversationFeed session={session} />;
 };
 
 export default Feed;

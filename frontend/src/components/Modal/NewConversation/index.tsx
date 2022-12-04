@@ -84,6 +84,8 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
         variables: { participantIds },
       });
 
+      console.log(data?.createConversation.data);
+
       if (data?.createConversation.success) {
         onClose();
         setParticipants([]);
@@ -119,6 +121,7 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
 
   return (
     <BaseModal
+      isCentered
       isOpen={isOpen}
       onClose={() => {
         setUsername('');
