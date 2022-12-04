@@ -56,6 +56,22 @@ class UserService {
       throw new ApolloError('Error while searching for users.', '500');
     }
   }
+
+  async updateUsername(userId: string, newUsername: string): Promise<User> {
+    if (!newUsername) throw new ApolloError('Username is a required field.');
+    if (newUsername.length < 3)
+      throw new ApolloError('Username needs to be 3 characters long.');
+
+    try {
+      const updatedUser = await this.#prisma.user.update({
+        where: { id: userId },
+        data: { username: newUsername },
+      });
+      return updatedUser;
+    } catch (error) {
+      throw new ApolloError('Error updating username', '500');
+    }
+  }
 }
 
 export default new UserService();
