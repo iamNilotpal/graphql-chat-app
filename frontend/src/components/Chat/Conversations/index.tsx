@@ -1,7 +1,31 @@
+import { Box, Flex, HStack, VStack } from '@chakra-ui/react';
+import { Session } from 'next-auth';
 import React from 'react';
+import ConversationList from './ConversationList';
+import Footer from './Footer';
+import Header from './Header';
 
-const Conversations = () => {
-  return <div>Conversations</div>;
+type ConversationsWrapperProps = {
+  session: Session;
 };
 
-export default Conversations;
+const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
+  session,
+}) => {
+  return (
+    <Flex
+      flexDir="column"
+      bg="blackAlpha.400"
+      position="relative"
+      borderRightWidth="thin"
+      borderRightColor="#373a40"
+      width={{ base: '100%', md: '400px' }}
+    >
+      <Header />
+      <ConversationList />
+      <Footer session={session} />
+    </Flex>
+  );
+};
+
+export default ConversationsWrapper;

@@ -1,7 +1,7 @@
 import { CloseIcon } from '@chakra-ui/icons';
 import { Badge, Box, Button, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
-import { SearchedUser } from '../../types/operations/user';
+import { SearchedUser } from '../../../../types/operations/user';
 
 type ParticipantsProps = {
   participants: SearchedUser[];
@@ -24,7 +24,7 @@ const Participants: React.FC<ParticipantsProps> = ({
     <Box mt="5">
       <Flex w="100%" flexWrap="wrap" gap={2}>
         {participants.map((participant) => (
-          <Badge key={participant.id} colorScheme="pink">
+          <Badge key={participant.id} colorScheme="purple">
             <Flex alignItems="center" p={2}>
               <Text mr="5">{participant.username}</Text>
               <CloseIcon
@@ -38,12 +38,12 @@ const Participants: React.FC<ParticipantsProps> = ({
       </Flex>
       <Button
         mt="5"
-        size="sm"
         w="100%"
-        colorScheme="messenger"
-        onClick={onCreateConversation}
-        isLoading={loading}
+        size="sm"
         disabled={loading}
+        isLoading={loading}
+        colorScheme="purple"
+        onClick={onCreateConversation}
         loadingText="Creating conversation..."
       >
         Create Conversation

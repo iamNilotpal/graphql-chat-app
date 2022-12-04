@@ -7,25 +7,28 @@ import {
   ModalHeader,
   Stack,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 
 import ConversationOperations from '../../../graphql/operations/conversation';
 import UserOperations from '../../../graphql/operations/user';
-import Participants from '../../Participants';
-import UserSearchList from '../../UserSearchList';
+import Participants from '../../Chat/Conversations/Participants';
+import SearchedUsersList from '../../Chat/Conversations/SearchedUsersList';
 import BaseModal from '../BaseModal';
 
+import { useRouter } from 'next/router';
+import { toastValues } from '../../../constants/toast';
+import {
+  CreateConversationInput,
+  CreateConversationResponse,
+} from '../../../types/operations/conversation';
 import {
   SearchedUser,
   SearchUsersInput,
   SearchUsersResponse,
 } from '../../../types/operations/user';
-import {
-  CreateConversationInput,
-  CreateConversationResponse,
-} from '../../../types/operations/conversation';
 
 type NewConversationModalProps = {
   isOpen: boolean;
@@ -36,6 +39,8 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const router = useRouter();
+  const toast = useToast();
   const { data: session } = useSession();
   const [username, setUsername] = useState<string>('');
   const [participants, setParticipants] = useState<SearchedUser[]>([]);
@@ -69,18 +74,46 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
   };
 
   const onCreateConversation = async () => {
-    // if (participants.length === 0) return;
-    // const participantIds: string[] = [session?.user!, ...participants].map(
-    //   (p) => p.id
-    // );
+    if (participants.length === 0) return;
+    const participantIds: string[] = [session?.user!, ...participants].map(
+      (p) => p.id
+    );
 
     try {
       const { data } = await createConversation({
-        variables: { participantIds: [] },
+        variables: { participantIds },
       });
-      console.log(data?.createConversation);
+
+      if (data?.createConversation.success) {
+        onClose();
+        setParticipants([]);
+
+        toast({
+          ...toastValues,
+          description:
+            participants.length > 1
+              ? `${participants[0].username} and ${participants.length - 1} ${
+                  participants.length === 2 ? 'other' : 'others'
+                } has been added.`
+              : `${participants[0].username} has been added.`,
+        });
+
+        router.push({
+          query: { conversation: data.createConversation.data.conversation.id },
+        });
+      } else {
+        toast({
+          ...toastValues,
+          status: 'error',
+          description: data?.createConversation.error?.message,
+        });
+      }
     } catch (error) {
-      console.log(error);
+      toast({
+        status: 'error',
+        description:
+          error instanceof Error ? error.message : 'Something went wrong.',
+      });
     }
   };
 
@@ -107,13 +140,14 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
               type="submit"
               disabled={!username || searchUserLoading}
               isLoading={searchUserLoading}
+              loadingText="Searching..."
             >
               Submit
             </Button>
           </Stack>
         </form>
         {searchedUsersData?.searchUsers.data.users && (
-          <UserSearchList
+          <SearchedUsersList
             users={searchedUsersData?.searchUsers.data.users || []}
             onSelectParticipant={onSelectParticipant}
           />

@@ -1,7 +1,6 @@
 import { Button, Text, VStack } from '@chakra-ui/react';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
-import googleIcon from '../../../assets/google.png';
 
 const Login = () => {
   return (
@@ -23,7 +22,7 @@ const Login = () => {
         aria-label="google login"
         onClick={() => signIn('google')}
         leftIcon={
-          <Image src={googleIcon} alt="Google icon" width={20} height={20} />
+          <Image src="/google.png" alt="Google icon" width={20} height={20} />
         }
         fontSize="14px"
       >
