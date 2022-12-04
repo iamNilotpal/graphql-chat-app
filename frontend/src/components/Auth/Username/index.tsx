@@ -46,16 +46,18 @@ const GetUsername: React.FC<GetUsernameProps> = ({ updateSession }) => {
     <VStack align="center">
       <Input
         width="350px"
-        placeholder="Pick a username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
         fontSize="13px"
+        value={username}
+        placeholder="Pick a username"
+        bgColor="whiteAlpha.200"
+        onChange={(e) => setUsername(e.target.value)}
       />
       <Button
         width="350px"
-        disabled={!username || username.length < 3 || loading}
-        onClick={handleCreateUsername}
         isLoading={loading}
+        bgColor="whiteAlpha.200"
+        onClick={handleCreateUsername}
+        disabled={!username || username.length < 3 || loading}
       >
         Save
       </Button>

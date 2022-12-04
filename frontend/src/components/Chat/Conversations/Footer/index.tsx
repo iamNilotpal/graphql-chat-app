@@ -13,11 +13,11 @@ const Footer: React.FC<FooterProps> = () => {
 
   return (
     <Flex
+      right={5}
+      bottom={5}
       width="100%"
       justifyContent="flex-end"
       position="absolute"
-      bottom={5}
-      right={5}
     >
       <Tooltip
         fontSize="13px"

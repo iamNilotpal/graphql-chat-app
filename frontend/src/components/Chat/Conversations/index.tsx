@@ -15,7 +15,7 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
   return (
     <Flex
       flexDir="column"
-      bg="blackAlpha.400"
+      bg="blackAlpha.300"
       position="relative"
       borderRightWidth="thin"
       borderRightColor="#373a40"
