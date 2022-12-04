@@ -5,6 +5,14 @@ export type CreateConversationInput = {
   participantIds: string[];
 };
 
+export type AllConversationResponse = {
+  conversations: {
+    data: { conversation: Conversation };
+    success: boolean;
+    error: ApiError | null;
+  };
+};
+
 export type Conversation = {
   id: string;
   messages: Message[];
